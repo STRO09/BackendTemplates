@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: auths
+
+  profiles:
+    active: dev
+    include: mysql

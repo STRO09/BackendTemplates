@@ -1,0 +1,11 @@
+spring:
+  jpa:
+    show-sql: false
+
+    hibernate:
+      ddl-auto: validate
+      #validate won't create or change but only validate existing schema
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
