@@ -29,7 +29,7 @@ Each template focuses on:
 | Spring Boot + JWT | JWT Authentication + Refresh Tokens | 🚧 Planned |
 | Spring Boot + JWT + OAuth2 | JWT, Refresh Tokens, Google/GitHub OAuth | 🚧 Planned |
 | Spring Boot + JWT + OAuth2 + Passkeys | Complete authentication starter with WebAuthn support | 🚧 Planned |
-| Node.js | Express/NestJS backend starter | 📅 Planned |
+| Node.js | Express backend starter | ✅ Available |
 | Go | Production-ready Go backend starter | 📅 Planned |
 
 ---
