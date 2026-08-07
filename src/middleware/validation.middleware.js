@@ -1,8 +1,15 @@
 import ApiError from "../utils/ApiError.js";
+import logger from "../utils/logger.js";
 
 export default function validate(schema) {
 
     return (req, res, next) => {
+
+        logger.debug("Validating request.", {
+            method: req.method,
+            path: req.originalUrl,
+            body: req.body
+        });
 
         const result = schema.safeParse(req.body);
 
@@ -13,6 +20,12 @@ export default function validate(schema) {
                 message: issue.message
             }));
 
+            logger.warn("Request validation failed.", {
+                method: req.method,
+                path: req.originalUrl,
+                errors
+            });
+
             return next(
                 new ApiError({
                     statusCode: 400,
@@ -21,6 +34,11 @@ export default function validate(schema) {
                 })
             );
         }
+
+        logger.debug("Request validation succeeded.", {
+            method: req.method,
+            path: req.originalUrl
+        });
 
         req.body = result.data;
 

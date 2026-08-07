@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import IRepository from "../../repository.interface.js";
+import logger from "../../../utils/logger.js";
 
 /**
  * Base repository implementation for MongoDB using Mongoose.
@@ -42,7 +43,9 @@ export default class MongoRepository extends IRepository {
    * @returns {Promise<void>}
    */
   async initialize() {
+    logger.info(`Initializing ${this.model.modelName} repository...`);
     await this.model.init();
+    logger.success(`${this.model.modelName} repository initialized.`);
   }
 
   async create(data) {

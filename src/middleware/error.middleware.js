@@ -1,4 +1,5 @@
 import ApiError from "../utils/ApiError.js";
+import logger from "../utils/logger.js";
 
 /**
  * Global Express error handler.
@@ -22,7 +23,7 @@ export default function errorMiddleware(err, req, res, next) {
         });
     }
 
-    console.error(err);
+    logger.error(err);
 
     return res.status(500).json({
         success: false,

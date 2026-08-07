@@ -1,4 +1,4 @@
-import MongoRepository from "./baseRepository.js";
+import MongoRepository from "./mongoRepository.js";
 import Product from "../models/product.model.js";
 
 class ProductRepository extends MongoRepository {

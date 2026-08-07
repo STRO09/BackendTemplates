@@ -18,6 +18,7 @@ import mongoose from "mongoose";
 import env from "./env.js";
 import retry from "../utils/retry.js";
 import repositories from "../db/provider.js";
+import logger from '../utils/logger.js';
 
 /**
  * Establish a MongoDB connection using Mongoose.
@@ -26,15 +27,20 @@ import repositories from "../db/provider.js";
  */
 
 async function connectMongo() {
+  logger.info("Connecting to MongoDB");
+
   await retry(() => mongoose.connect(env.MONGO_URI), {
     retries: 5,
 
     onRetry(error, attempt, delay) {
-      console.warn(`Mongo connection failed. Retry ${attempt} in ${delay}ms.`);
+      logger.warn("Retrying MongoDB connection", {
+        attempt,
+        delay,
+      });
     },
   });
 
-  console.log("✅ Mongo Connected");
+    logger.success("MongoDB connected");
   await initializeRepositories();
 }
 
@@ -55,7 +61,7 @@ async function connectMongo() {
 async function initializeRepositories() {
   const repositoryEntries = Object.entries(repositories);
 
-  console.log(`🔄 Initializing ${repositoryEntries.length} repositories...`);
+  logger.info(`🔄 Initializing ${repositoryEntries.length} repositories...`);
 
   await Promise.all(
     repositoryEntries.map(async ([name, repository]) => {
@@ -67,7 +73,7 @@ async function initializeRepositories() {
     }),
   );
 
-  console.log("✅ Repository initialization complete.");
+  logger.success("✅ Repository initialization complete.");
 }
 
 async function connectDB() {
