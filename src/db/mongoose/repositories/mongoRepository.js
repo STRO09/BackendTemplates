@@ -69,7 +69,8 @@ export default class MongoRepository extends IRepository {
   }
 
   async exists(filter) {
-    return this.model.exists(filter);
+    const result = await this.model.exists(filter);
+    return Boolean(result);
   }
 
   async count(filter = {}) {

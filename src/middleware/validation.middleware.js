@@ -8,7 +8,6 @@ export default function validate(schema) {
         logger.debug("Validating request.", {
             method: req.method,
             path: req.originalUrl,
-            body: req.body
         });
 
         const result = schema.safeParse(req.body);

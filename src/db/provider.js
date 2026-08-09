@@ -14,6 +14,7 @@
 import env from "../config/env.js";
 
 import productMongoRepository from "./mongoose/repositories/product.repository.js";
+import userMongoRepository from "./mongoose/repositories/user.repository.js";
 
 /**
  * Repository registry.
@@ -27,6 +28,7 @@ const repositories = {};
 switch (env.DB_DRIVER) {
   case "mongo":
     repositories.product = productMongoRepository;
+    repositories.user = userMongoRepository;
     break;
 
   default:

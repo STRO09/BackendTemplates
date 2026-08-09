@@ -65,11 +65,11 @@ async function initializeRepositories() {
 
   await Promise.all(
     repositoryEntries.map(async ([name, repository]) => {
-      console.log(`   ↳ ${name}`);
+      console.log(`${name}↴`);
 
       await repository.initialize();
 
-      console.log(`   ✓ ${name}`);
+      console.log(`✓ ${name}`);
     }),
   );
 

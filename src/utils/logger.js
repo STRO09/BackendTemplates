@@ -1,4 +1,4 @@
-// import pino from "pino";
+import env from "../config/env.js";
 
 /**
  * Centralized application logger.
@@ -22,18 +22,36 @@
  * });
  */
 
-// const pinoLogger = pino({
-//     level: process.env.NODE_ENV === "production"
-//         ? "info"
-//         : "debug"
-// });
-
 /**
  * Generates an ISO-8601 timestamp for log entries.
  *
  * @returns {string}
  */
 const timestamp = () => new Date().toISOString();
+
+/**
+ * Normalize an Error object into structured logging information.
+ *
+ * Error objects don't serialize particularly well when passed as
+ * ordinary context values. This explicitly preserves the information
+ * needed for debugging.
+ *
+ * @param {Error} error
+ * Error to normalize.
+ *
+ * @returns {{
+ *     name: string,
+ *     message: string,
+ *     stack?: string
+ * }}
+ */
+function serializeError(error) {
+    return {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+    };
+}
 
 /**
  * Writes a log entry using the configured logging implementation.
@@ -46,12 +64,15 @@ const timestamp = () => new Date().toISOString();
  *
  * @param {"info"|"success"|"warn"|"error"|"debug"} level
  * Logging level.
+ *
  * @param {string} message
  * Human-readable log message.
+ *
  * @param {Object} [context={}]
  * Additional structured information associated with the log entry.
  */
 function writeLog(level, message, context = {}) {
+
     const consoleMap = {
         info: console.log,
         success: console.log,
@@ -96,9 +117,6 @@ const logger = {
     /**
      * Log the successful completion of an operation.
      *
-     * This is mapped to the INFO level internally since most logging
-     * libraries do not expose a dedicated SUCCESS level.
-     *
      * @param {string} message
      * @param {Object} [context={}]
      */
@@ -119,10 +137,31 @@ const logger = {
     /**
      * Log an error.
      *
-     * @param {string} message
+     * When an Error object is supplied as the first argument, its
+     * name, message, and stack trace are preserved.
+     *
+     * @param {string|Error} message
+     * Error message or Error instance.
+     *
      * @param {Object} [context={}]
+     * Additional structured information.
      */
     error(message, context = {}) {
+
+        if (message instanceof Error) {
+
+            writeLog(
+                "error",
+                `${message.name}: ${message.message}`,
+                {
+                    ...context,
+                    stack: message.stack
+                }
+            );
+
+            return;
+        }
+
         writeLog("error", message, context);
     },
 
@@ -135,7 +174,8 @@ const logger = {
      * @param {Object} [context={}]
      */
     debug(message, context = {}) {
-        if (process.env.NODE_ENV !== "production") {
+
+        if (env.NODE_ENV !== "production") {
             writeLog("debug", message, context);
         }
     }
