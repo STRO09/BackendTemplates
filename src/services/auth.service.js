@@ -1,5 +1,5 @@
-import passwordProvider from "./providers/password.provider.js";
-import authStrategy from "./provider.js";
+import passwordProvider from "../auth/providers/password.provider.js";
+import authStrategy from "../auth/provider.js";
 import repositories from "../db/provider.js";
 import { hash } from "../utils/hashing.js";
 import { generateFromEmail } from "../utils/usernameGenerator.js";
@@ -10,10 +10,11 @@ import ApiError from "../utils/ApiError.js";
 import logger from "../utils/logger.js";
 
 class AuthService {
-
-  async register({ 
-    // firstName, lastName, 
-    email, password }) {
+  async register({
+    // firstName, lastName,
+    email,
+    password,
+  }) {
     logger.info("User registration attempt", {
       email,
     });
@@ -50,10 +51,10 @@ class AuthService {
     const passwordHash = await hash(password);
 
     const user = await userRepository.create({
-    //   firstName,
-    //   lastName,
+      //   firstName,
+      //   lastName,
       email: email.toLowerCase(),
-    //   username,
+      //   username,
       passwordHash,
     });
 
@@ -64,7 +65,7 @@ class AuthService {
     return serializeUser(user);
   }
 
-  async login({ email, password }) {
+  async login({ email, password }, context = {}) {
     logger.info("Authentication attempt", {
       email,
     });
@@ -74,7 +75,7 @@ class AuthService {
       password,
     });
 
-    const credentials = await authStrategy.issue(user);
+    const credentials = await authStrategy.issue(user, context);
 
     logger.success("User authenticated", {
       userId: user._id.toString(),
@@ -84,6 +85,10 @@ class AuthService {
       user: serializeUser(user),
       ...credentials,
     };
+  }
+
+  async refresh(refreshToken, context = {}) {
+    return authStrategy.refresh(refreshToken, context);
   }
 }
 

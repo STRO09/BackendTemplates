@@ -15,6 +15,7 @@ import env from "../config/env.js";
 
 import productMongoRepository from "./mongoose/repositories/product.repository.js";
 import userMongoRepository from "./mongoose/repositories/user.repository.js";
+import refreshSessionMongoRepository from "./mongoose/repositories/refreshSession.repository.js";
 
 /**
  * Repository registry.
@@ -29,6 +30,7 @@ switch (env.DB_DRIVER) {
   case "mongo":
     repositories.product = productMongoRepository;
     repositories.user = userMongoRepository;
+    repositories.refreshSession = refreshSessionMongoRepository;
     break;
 
   default:

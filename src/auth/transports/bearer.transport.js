@@ -19,7 +19,7 @@ class BearerTransport {
      * @returns {string|null}
      * Extracted token, or null when no valid Bearer header exists.
      */
-    extract(req) {
+    extractAccessToken(req) {
         const authorization = req.headers.authorization;
 
         if (!authorization) {

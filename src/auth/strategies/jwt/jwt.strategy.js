@@ -43,7 +43,7 @@ class JwtStrategy extends TokenStrategy {
   verifyAccessToken(token) {
     const payload = verify(token);
 
-    if (payload.type !== "access") {
+    if (payload.type !== "access" || !payload.sub) {
       throw new Error("Invalid access token.");
     }
 

@@ -20,7 +20,7 @@ export default class TokenStrategy {
      * @returns {Promise<Object>|Object}
      * Authentication credentials issued by the strategy.
      */
-    issue(user) {
+    async issue(user) {
         throw new Error("Method not implemented.");
     }
 }

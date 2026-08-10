@@ -53,12 +53,18 @@ const env = {
   NODE_ENV: process.env.NODE_ENV || "development",
   JWT_SECRET: required("JWT_SECRET"),
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN ?? "15m",
-  REFRESH_SECRET: required("REFRESH_SECRET"),
   AUTH_STRATEGY: required("AUTH_STRATEGY"),
   REFRESH_SECRET:
     process.env.AUTH_STRATEGY === "jwt-refresh"
       ? required("REFRESH_SECRET")
       : process.env.REFRESH_SECRET,
+  REFRESH_EXPIRES_IN:
+    process.env.AUTH_STRATEGY === "jwt-refresh"
+      ? process.env.REFRESH_EXPIRES_IN ?? "7d"
+      : process.env.REFRESH_EXPIRES_IN,
+  ACCESS_TOKEN_TRANSPORT: process.env.ACCESS_TOKEN_TRANSPORT,
+  ACCESS_TOKEN_COOKIE_NAME: process.env.ACCESS_TOKEN_COOKIE_NAME ?? "accessToken",
+  REFRESH_TOKEN_COOKIE_NAME: process.env.REFRESH_TOKEN_COOKIE_NAME ?? "refreshToken",
 };
 
 export default env;
