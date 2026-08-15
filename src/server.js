@@ -1,6 +1,6 @@
 import http from "http";
 import app from "./app.js";
-import connectDB from "./config/db.js";
+import connectDB from "./config/db.config.js";
 import env from "./config/env.js";
 import logger from "./utils/logger.js";
 
