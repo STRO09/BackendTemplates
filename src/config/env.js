@@ -35,36 +35,82 @@ function required(key) {
 
   return value;
 }
+const authStrategy = required("AUTH_STRATEGY");
 
 /**
  * Application configuration.
- *
- * @type {{
- * PORT:number|string,
- * MONGO_URI:string|undefined,
- * DB_DRIVER:string,
- * NODE_ENV:string
- * }}
  */
 const env = {
+  /*
+   * Application.
+   */
   PORT: process.env.PORT ?? 3000,
-  MONGO_URI: process.env.MONGO_URI,
+
+  NODE_ENV: process.env.NODE_ENV ?? "development",
+
+  /*
+   * Database.
+   */
   DB_DRIVER: required("DB_DRIVER"),
-  NODE_ENV: process.env.NODE_ENV || "development",
+
+  MONGO_URI: process.env.MONGO_URI,
+
+  /*
+   * Authentication.
+   */
+  AUTH_STRATEGY: authStrategy,
+
   JWT_SECRET: required("JWT_SECRET"),
+
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN ?? "15m",
-  AUTH_STRATEGY: required("AUTH_STRATEGY"),
+
   REFRESH_SECRET:
-    process.env.AUTH_STRATEGY === "jwt-refresh"
+    authStrategy === "jwt-refresh"
       ? required("REFRESH_SECRET")
       : process.env.REFRESH_SECRET,
+
   REFRESH_EXPIRES_IN:
-    process.env.AUTH_STRATEGY === "jwt-refresh"
-      ? process.env.REFRESH_EXPIRES_IN ?? "7d"
+    authStrategy === "jwt-refresh"
+      ? (process.env.REFRESH_EXPIRES_IN ?? "7d")
       : process.env.REFRESH_EXPIRES_IN,
-  ACCESS_TOKEN_TRANSPORT: process.env.ACCESS_TOKEN_TRANSPORT,
-  ACCESS_TOKEN_COOKIE_NAME: process.env.ACCESS_TOKEN_COOKIE_NAME ?? "accessToken",
-  REFRESH_TOKEN_COOKIE_NAME: process.env.REFRESH_TOKEN_COOKIE_NAME ?? "refreshToken",
+
+  /*
+   * Token transport.
+   */
+  ACCESS_TOKEN_TRANSPORT: process.env.ACCESS_TOKEN_TRANSPORT ?? "bearer",
+
+  ACCESS_TOKEN_COOKIE_NAME:
+    process.env.ACCESS_TOKEN_COOKIE_NAME ?? "accessToken",
+
+  REFRESH_TOKEN_COOKIE_NAME:
+    process.env.REFRESH_TOKEN_COOKIE_NAME ?? "refreshToken",
+
+  /*
+   * File storage.
+   */
+  FILE_STORAGE_PROVIDER: process.env.FILE_STORAGE_PROVIDER ?? "local",
+
+  /*
+   * Cache.
+   */
+  CACHE_PROVIDER: process.env.CACHE_PROVIDER ?? "memory",
+
+  /*
+   * Sockets.
+   */
+  SOCKET_PROVIDER: process.env.SOCKET_PROVIDER ?? "socketio",
+
+  /*
+   * Redis.
+   */
+
+  REDIS_HOST: process.env.REDIS_HOST ?? "127.0.0.1",
+
+  REDIS_PORT: Number(process.env.REDIS_PORT ?? 6379),
+
+  REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+
+  REDIS_DATABASE: Number(process.env.REDIS_DATABASE ?? 0),
 };
 
 export default env;

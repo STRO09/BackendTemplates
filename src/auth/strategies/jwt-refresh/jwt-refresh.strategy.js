@@ -11,7 +11,7 @@ import TokenStrategy from "../token.strategy.js";
 import env from "../../../config/env.js";
 import ApiError from "../../../utils/ApiError.js";
 import logger from "../../../utils/logger.js";
-import { parseDuration } from "../../../utils/TimeDateFormat.js";
+import { parseDuration } from "../../../utils/DateTimeFormat.js";
 
 const { refreshSession: refreshSessionRepository } = repositories;
 
