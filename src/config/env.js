@@ -111,6 +111,20 @@ const env = {
   REDIS_PASSWORD: process.env.REDIS_PASSWORD,
 
   REDIS_DATABASE: Number(process.env.REDIS_DATABASE ?? 0),
+
+  SMTP_HOST: process.env.SMTP_HOST,
+
+  SMTP_PORT: process.env.SMTP_PORT ?? 25,
+
+  SMTP_SECURE: process.env.SMTP_SECURE ?? "false",
+
+  SMTP_USER: process.env.SMTP_USER,
+
+  SMTP_PASSWORD: process.env.SMTP_PASSWORD,
+
+  SMTP_FROM: process.env.SMTP_FROM ?? "noreply@localhost",
+
+  NOTIFICATION_PROVIDER: required("NOTIFICATION_PROVIDER"),
 };
 
 export default env;

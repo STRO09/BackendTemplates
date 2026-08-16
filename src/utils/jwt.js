@@ -3,40 +3,56 @@ import jwt from "jsonwebtoken";
 import env from "../config/env.js";
 
 /**
- * Signs a JWT using the application's configured JWT secret.
+ * Sign a JWT.
  *
  * @param {Object} payload
- * Data to encode into the token.
+ * Token payload.
  *
- * @param {Object} [options]
- * Additional jsonwebtoken signing options.
+ * @param {Object} [options={}]
+ * JWT signing options.
+ *
+ * @param {string} [options.secret=env.JWT_SECRET]
+ * Signing secret.
+ *
+ * @param {string} [options.expiresIn=env.JWT_EXPIRES_IN]
+ * Token lifetime.
  *
  * @returns {string}
  * Signed JWT.
  */
 export function sign(payload, options = {}) {
-    return jwt.sign(
-        payload,
-        env.JWT_SECRET,
-        {
-            expiresIn: env.JWT_EXPIRES_IN,
-            ...options
-        }
-    );
+  const {
+    secret = env.JWT_SECRET,
+    expiresIn = env.JWT_EXPIRES_IN,
+    ...jwtOptions
+  } = options;
+
+  return jwt.sign(payload, secret, {
+    expiresIn,
+    ...jwtOptions,
+  });
 }
 
 /**
- * Verifies and decodes an application JWT.
+ * Verify and decode a JWT.
  *
  * @param {string} token
  * JWT to verify.
  *
+ * @param {Object} [options={}]
+ * JWT verification options.
+ *
+ * @param {string} [options.secret=env.JWT_SECRET]
+ * Verification secret.
+ *
  * @returns {Object}
- * Decoded JWT payload.
+ * Decoded token payload.
  *
  * @throws {JsonWebTokenError|TokenExpiredError}
  * If the token is invalid or expired.
  */
-export function verify(token) {
-    return jwt.verify(token, env.JWT_SECRET);
+export function verify(token, options = {}) {
+  const { secret = env.JWT_SECRET, ...jwtOptions } = options;
+
+  return jwt.verify(token, secret, jwtOptions);
 }

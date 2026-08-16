@@ -2,7 +2,7 @@ import http from "http";
 import app from "./app.js";
 import env from "./config/env.js";
 import connectDB from "./config/db.config.js";
-import redisClient from "./config/redis.config.js";
+import redisClient, {connectRedis} from "./config/redis.config.js";
 import logger from "./utils/logger.js";
 
 async function start() {
@@ -13,7 +13,7 @@ async function start() {
 
     logger.info("Starting application");
 
-    await redisClient.connect();
+    await connectRedis();
 
     logger.info("Starting socket server");
 

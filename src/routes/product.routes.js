@@ -11,25 +11,25 @@ router.post("/", validate(createProductSchema), controller.create);
 
 router.get("/", authenticate, controller.getAll);
 
-router.get("/cache", async (req, res) => {
-  await cacheProvider.set(
-    "test",
-    {
-      message: "Hello Redis",
-    },
-    60,
-  );
+// router.get("/cache", async (req, res) => {
+//   await cacheProvider.set(
+//     "test",
+//     {
+//       message: "Hello Redis",
+//     },
+//     60,
+//   );
 
-  const data = await cacheProvider.get("test");
+//   const data = await cacheProvider.get("test");
 
-  res.json(data);
-});
+//   res.json(data);
+// });
 
-router.get("/cache2", async (req, res) => {
-  const data = await cacheProvider.get("test");
+// router.get("/cache2", async (req, res) => {
+//   const data = await cacheProvider.get("test");
 
-  res.json(data);
-});
+//   res.json(data);
+// });
 
 router.get("/:id", controller.getById);
 
