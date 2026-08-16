@@ -53,10 +53,5 @@ redisClient.on("error", (error) => {
  * @throws {Error}
  * If the initial connection attempt fails.
  */
-export async function connectRedis() {
-  logger.info("Connecting to Redis.");
-
-  await redisClient.connect();
-}
 
 export default redisClient;

@@ -18,6 +18,24 @@
  */
 export default class NotificationProvider {
   /**
+   * Initialize the notification provider.
+   *
+   * Performs any setup required before the provider can
+   * be used, such as establishing connections, validating
+   * credentials, or verifying access to external services.
+   *
+   * Implementations that don't require initialization may
+   * provide an empty implementation.
+   *
+   * @returns {Promise<void>}
+   *
+   * @abstract
+   */
+  async initialize() {
+    throw new Error("Method not implemented.");
+  }
+
+  /**
    * Send an email.
    *
    * @abstract

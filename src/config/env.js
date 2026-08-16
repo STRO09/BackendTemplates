@@ -122,9 +122,11 @@ const env = {
 
   SMTP_PASSWORD: process.env.SMTP_PASSWORD,
 
-  SMTP_FROM: process.env.SMTP_FROM ?? "noreply@localhost",
+  MAIL_FROM: process.env.MAIL_FROM ?? "noreply@localhost",
 
   NOTIFICATION_PROVIDER: required("NOTIFICATION_PROVIDER"),
+  
+  RESEND_API_KEY: process.env.RESEND_API_KEY,
 };
 
 export default env;

@@ -2,7 +2,7 @@ import http from "http";
 import app from "./app.js";
 import env from "./config/env.js";
 import connectDB from "./config/db.config.js";
-import redisClient, {connectRedis} from "./config/redis.config.js";
+import redisClient from "./config/redis.config.js";
 import logger from "./utils/logger.js";
 
 async function start() {
@@ -13,7 +13,14 @@ async function start() {
 
     logger.info("Starting application");
 
-    await connectRedis();
+    try {
+      redisClient.connect();
+    } catch (err) {
+      logger.warn(
+        "Failed to connect to Redis with all retries. Continuing without Redis.",
+        { err },
+      );
+    }
 
     logger.info("Starting socket server");
 

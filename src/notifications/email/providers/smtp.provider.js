@@ -14,6 +14,10 @@ class SmtpProvider extends NotificationProvider {
   constructor() {
     super();
 
+    this.transporter = null;
+  }
+
+  async initialize() {
     this.transporter = nodemailer.createTransport({
       host: env.SMTP_HOST,
 
@@ -58,13 +62,13 @@ class SmtpProvider extends NotificationProvider {
    */
   async send({ to, subject, html }) {
     const info = await this.transporter.sendMail({
-      from: env.SMTP_FROM,
+      from: env.MAIL_FROM,
       to,
       subject,
       html,
     });
 
-    console.log(info);
+    logger.info(info);
   }
 }
 
