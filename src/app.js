@@ -1,15 +1,22 @@
-import express from 'express';
-import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import cookieParser from 'cookie-parser';
-import routes from './routes/index.routes.js';
-import errorMiddleware from './middleware/error.middleware.js';
+import express from "express";
+import cors from "cors";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+import env from "../../config/env.js";
+import helmetMiddleware from "./middleware/helmet.middleware.js";
+import routes from "./routes/index.routes.js";
+import errorMiddleware from "./middleware/error.middleware.js";
 
 const app = express();
 
-app.use(cors());
-app.use(helmet());
+app.use(
+  cors({
+    origin: env.CORS_ORIGINS.split(","),
+    credentials: true,
+  }),
+);
+
+app.use(helmetMiddleware);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
