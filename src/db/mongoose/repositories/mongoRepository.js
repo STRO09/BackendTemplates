@@ -76,4 +76,36 @@ export default class MongoRepository extends IRepository {
   async count(filter = {}) {
     return this.model.countDocuments(filter);
   }
+
+  /**
+   * Find a paginated collection of documents.
+   *
+   * @param {Object} filter
+   * Query filter.
+   *
+   * @param {Object} pagination
+   *
+   * @param {number} pagination.skip
+   * Number of documents to skip.
+   *
+   * @param {number} pagination.limit
+   * Maximum number of documents to return.
+   *
+   * @returns {Promise<{
+   *   items: Array,
+   *   total: number
+   * }>}
+   */
+  async findPaginated(filter = {}, { skip = 0, limit = 10 } = {}) {
+    const [items, total] = await Promise.all([
+      this.model.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+
+      this.model.countDocuments(filter),
+    ]);
+
+    return {
+      items,
+      total,
+    };
+  }
 }

@@ -11,6 +11,8 @@ router.post("/", validate(createProductSchema), controller.create);
 
 router.get("/", authenticate, controller.getAll);
 
+router.get("/paginated", controller.findPaginated);
+
 // router.get("/cache", async (req, res) => {
 //   await cacheProvider.set(
 //     "test",

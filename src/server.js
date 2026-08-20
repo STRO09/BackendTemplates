@@ -13,14 +13,14 @@ async function start() {
 
     logger.info("Starting application");
 
-    try {
-      redisClient.connect();
-    } catch (err) {
-      logger.warn(
-        "Failed to connect to Redis with all retries. Continuing without Redis.",
-        { err },
-      );
-    }
+    // try {
+    //   redisClient.connect();
+    // } catch (err) {
+    //   logger.warn(
+    //     "Failed to connect to Redis with all retries. Continuing without Redis.",
+    //     { err },
+    //   );
+    // }
 
     logger.info("Starting socket server");
 

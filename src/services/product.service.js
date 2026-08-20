@@ -1,6 +1,7 @@
 import repositories from "../db/provider.js";
 import ApiError from "../utils/ApiError.js";
 import logger from "../utils/logger.js";
+import { getPagination, buildPagination } from "../utils/pagination.js";
 
 const { product: productRepository } = repositories;
 
@@ -38,6 +39,26 @@ class ProductService {
     }
 
     return product;
+  }
+
+  async findPaginated({ page, limit }) {
+    const pagination = getPagination({
+      page,
+      limit,
+    });
+
+    const { items, total } = await productRepository.findPaginated(
+      {},
+      pagination,
+    );
+
+    return {
+      items,
+      pagination: buildPagination({
+        ...pagination,
+        total,
+      }),
+    };
   }
 }
 

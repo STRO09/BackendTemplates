@@ -4,7 +4,6 @@ import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 class ProductController {
-  
   create = asyncHandler(async (req, res) => {
     const product = await productService.create(req.body);
 
@@ -30,6 +29,19 @@ class ProductController {
     return success(res, {
       message: "Product retrieved successfully.",
       data: product,
+    });
+  });
+
+  findPaginated = asyncHandler(async (req, res) => {
+    const products = await productService.findPaginated({
+      page: req.query.page,
+      limit: req.query.limit,
+    });
+
+    return success(res, {
+      message: "Products retrieved successfully.",
+      data: products.items,
+      pagination: products.pagination,
     });
   });
 }
