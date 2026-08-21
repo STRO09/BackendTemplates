@@ -36,6 +36,7 @@ function required(key) {
   return value;
 }
 const authStrategy = required("AUTH_STRATEGY");
+const paymentProvider = required("PAYMENT_PROVIDER");
 
 /**
  * Application configuration.
@@ -114,6 +115,10 @@ const env = {
 
   REDIS_DATABASE: Number(process.env.REDIS_DATABASE ?? 0),
 
+  /*
+   * Gmail smptp server config for nodemailer and Resend.
+   */
+
   SMTP_HOST: process.env.SMTP_HOST,
 
   SMTP_PORT: process.env.SMTP_PORT ?? 25,
@@ -127,8 +132,21 @@ const env = {
   MAIL_FROM: process.env.MAIL_FROM ?? "noreply@localhost",
 
   NOTIFICATION_PROVIDER: required("NOTIFICATION_PROVIDER"),
-  
+
+  /*
+   * Resend.
+   */
+
   RESEND_API_KEY: process.env.RESEND_API_KEY,
+
+  /*
+   * Payment.
+   */
+  PAYMENT_PROVIDER: paymentProvider,
+
+  RAZORPAY_KEY_ID: paymentProvider === "razorpay" ? required("RAZORPAY_KEY_ID") : process.env.RAZORPAY_KEY_ID,
+
+  RAZORPAY_KEY_SECRET: paymentProvider === "razorpay" ? required("RAZORPAY_KEY_SECRET") : process.env.RAZORPAY_KEY_SECRET,
 };
 
 export default env;

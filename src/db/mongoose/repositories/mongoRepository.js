@@ -60,7 +60,7 @@ export default class MongoRepository extends IRepository {
     return this.model.find(filter, null, options);
   }
 
-  async updateById(id, data, options = { new: true }) {
+  async updateById(id, data, options = { returnDocument: "after" },) {
     return this.model.findByIdAndUpdate(id, data, options);
   }
 
@@ -107,5 +107,11 @@ export default class MongoRepository extends IRepository {
       items,
       total,
     };
+  }
+
+  async findManyByIds(ids) {
+    return this.model.find({
+      _id: { $in: ids },
+    });
   }
 }

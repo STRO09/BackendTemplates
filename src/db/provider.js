@@ -16,6 +16,8 @@ import env from "../config/env.js";
 import productMongoRepository from "./mongoose/repositories/product.repository.js";
 import userMongoRepository from "./mongoose/repositories/user.repository.js";
 import refreshSessionMongoRepository from "./mongoose/repositories/refreshSession.repository.js";
+import orderMongoRepository from "./mongoose/repositories/order.repository.js";
+import checkoutMongoRepository from "./mongoose/repositories/checkout.repository.js";
 
 /**
  * Repository registry.
@@ -31,6 +33,8 @@ switch (env.DB_DRIVER) {
     repositories.product = productMongoRepository;
     repositories.user = userMongoRepository;
     repositories.refreshSession = refreshSessionMongoRepository;
+    repositories.order = orderMongoRepository;
+    repositories.checkout = checkoutMongoRepository;
     break;
 
   default:

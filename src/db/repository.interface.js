@@ -94,4 +94,15 @@ export default class IRepository {
   async count() {
     throw new Error("Method not implemented.");
   }
+
+    /**
+   * Find multiple entities by their unique identifiers.
+   *
+   * @abstract
+   * @param {string[]} ids
+   * @returns {Promise<Object[]>}
+   */
+  async findManyByIds() {
+  throw new Error("Method not implemented.");
+}
 }

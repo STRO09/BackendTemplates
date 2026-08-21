@@ -292,6 +292,18 @@ Generates the welcome email.
 
 ---
 
+### src/payment/providers/provider.interface.js
+
+Defines the common contract that every payment provider implementation must follow.
+
+### src/payment/providers/provider.js 
+Selects and exposes the configured payment provider without coupling the rest of the application to Razorpay.
+
+### src/payment/providers/razorpay.provider.js 
+Implements payment operations using the Razorpay API, including order creation, payment verification, and payment lookup.
+
+---
+
 ## src/routes
 
 ### src/routes/auth.routes.js
@@ -317,6 +329,10 @@ Implements authentication business logic.
 ### src/services/emailVerification.service.js
 
 Generates, stores, sends, and validates email verification tokens.
+
+### src/services/order.service.js
+
+Implements checkout, order and payment verification logic.
 
 ### src/services/product.service.js
 
@@ -386,6 +402,10 @@ Provides JWT generation and verification utilities.
 
 Provides structured application logging.
 
+### src/utils/pagination.js
+
+Provides a server side pagination component that's reusable.
+
 ### src/utils/refreshToken.js
 
 Provides refresh token utilities.
@@ -414,6 +434,16 @@ Transforms user objects into API-safe response objects.
 
 Defines authentication request validation schemas.
 
+### src/validators/order.validator.js
+
+Defines checkout and payment verification schema.
+
 ### src/validators/product.validator.js
 
 Defines product request validation schemas.
+
+### testpages 
+Just some demo pages that need web interaction and won't suffice with postman.
+
+### testpages/paymentDemo.html
+razorpay demo checkout and payment verification
