@@ -374,6 +374,15 @@ Implements socket communication using Socket.IO.
 
 ## src/utils
 
+## src/utils/workers/worker.js
+Executes registered tasks inside an isolated Node.js worker thread and communicates results back to the main thread.
+
+## src/utils/workers/workerPool.js
+Manages a pool of reusable worker threads and distributes submitted tasks among available workers.
+
+## src/utils/workers/tasks/index.js
+Registers and exposes the tasks that are available for execution by worker threads.
+
 ### src/utils/ApiError.js
 
 Defines a standardized application error object.
