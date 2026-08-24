@@ -19,7 +19,10 @@ export default function errorMiddleware(err, req, res, next) {
       success: false,
       message: err.message,
       ...(err.errors && { errors: err.errors }),
-      ...(err.meta && { meta: err.meta }),
+      meta: {
+        requestId: req.id,
+        ...err.meta,
+      },
     });
   }
 
@@ -31,5 +34,8 @@ export default function errorMiddleware(err, req, res, next) {
   return res.status(500).json({
     success: false,
     message: "Internal Server Error",
+    meta: {
+      requestId: req.id,
+    },
   });
 }

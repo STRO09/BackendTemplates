@@ -3,6 +3,7 @@ import cookieTransport from "../auth/transports/cookie.transport.js";
 import { deliverCredentials } from "../auth/credentialTransport.js";
 import { success } from "../utils/response.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import ApiError from "../utils/ApiError.js";
 
 class AuthController {
   register = asyncHandler(async (req, res) => {

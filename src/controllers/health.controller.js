@@ -1,7 +1,7 @@
 import asyncHandler from "../utils/asyncHandler.js";
 import { success } from "../utils/response.js";
 import { register } from "../utils/metrics.js";
-import { formatDuration } from "../utils/DateTimeFormat.js";
+import {formatDuration} from "../utils/DateTimeFormat.js"
 
 class HealthController {
   /**
@@ -14,7 +14,7 @@ class HealthController {
       message: "Service is healthy.",
       data: {
         status: "ok",
-        uptime: formatDuration(process.uptime() * 1000),
+        uptime: formatDuration(process.uptime()),
       },
     });
   });

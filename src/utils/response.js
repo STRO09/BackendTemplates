@@ -21,7 +21,10 @@ export function success(
       message,
       data,
       pagination,
-      meta,
+      meta: {
+        requestId: res.req.id,
+        ...meta,
+      },
     }),
   );
 }

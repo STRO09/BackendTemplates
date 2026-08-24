@@ -7,11 +7,11 @@ import cacheProvider from "../cache/providers/provider.js";
 
 const router = express.Router();
 
-router.post("/", validate(createProductSchema), controller.create);
+router.post("/", authenticate, validate(createProductSchema), controller.create);
 
 router.get("/", authenticate, controller.getAll);
 
-router.get("/paginated", controller.findPaginated);
+router.get("/paginated", authenticate, controller.findPaginated);
 
 // router.get("/cache", async (req, res) => {
 //   await cacheProvider.set(

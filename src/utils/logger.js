@@ -155,7 +155,7 @@ const logger = {
                 `${message.name}: ${message.message}`,
                 {
                     ...context,
-                    stack: message.stack
+                    error : serializeError(message)
                 }
             );
 
