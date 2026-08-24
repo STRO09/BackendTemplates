@@ -27,6 +27,7 @@ The template focuses on providing:
 - Structured logging
 - Reusable utilities
 - Scalable service and repository layers
+- Provider and strategy design abstractions
 
 The goal is not to provide a complete application, but rather a strong foundation that can be extended according to the requirements of the project being built.
 
@@ -36,22 +37,29 @@ The goal is not to provide a complete application, but rather a strong foundatio
 
 | Category | Technology |
 | --- | --- |
-| Framework | Node.js |
+| Runtime | Node.js |
 | API | Express.js |
 | Specification | ES6+ |
-| Database | MongoDB with Mongoose Sample (other dbs Supported as well) |
+| Database | MongoDB with Mongoose Sample (other dbs / ORMs can be switched with easily) |
 | Authentication Strategies | JWT, Refresh Token, OAuth, Passkeys |
 | Validation | Zod |
 | Logging | Custom Logger / Pino |
+| Metrics | prom-client / Prometheus |
+| Real-time Communication | Socket.IO |
+| Payment | Razorpay / Stripe |
+| Email | Resend / SMTP |
+| File Storage | Local Filesystem / Cloudinary |
+| Cache | In-Memory / Redis |
 | Package Manager | npm |
 
-
+THE ARCHITECTURE IS PROVIDER-BASED WHERE PRACTICAL, ALLOWING INFRASTRUCTURE IMPLEMENTATIONS TO BE REPLACED WITHOUT COUPLING BUSINESS LOGIC TO A SPECIFIC VENDOR.
 
 ## Features
 
 ### Core Infrastructure
 
 - Modular Express application structure
+- Layered controller/service/repository architecture
 - Centralized environment configuration
 - Standardized API responses
 - Global error handling
@@ -59,6 +67,7 @@ The goal is not to provide a complete application, but rather a strong foundatio
 - Request validation
 - Structured application logging
 - Async request handling
+- Reusable utilities
 
 ### Database
 
@@ -86,14 +95,78 @@ The goal is not to provide a complete application, but rather a strong foundatio
   - User agent
 - Configurable refresh-token cookie transport
 
-### Extensibility
+### Email
 
-The authentication architecture separates authentication strategies from token transports, allowing additional authentication mechanisms to be introduced without rewriting the core authentication service.
+- Email provider abstraction
+  - Resend provider
+  - SMTP provider
+- Email verification flow
+- Reusable email templates
+  - Password reset template
+  - Welcome email template
 
-Planned authentication extensions include:
+### Payments 
 
-- OAuth
-- Passkeys / WebAuthn
+- Payment provider abstraction
+  - Razorpay provider
+  - Stripe provider
+- Razorpay webhook integration
+
+The payment architecture isolates operations behind a provider interface so the application is not directly coupled to the Razorpay / Stripe SDK/API.
+
+### File Uploads
+
+- File storage provider abstraction
+  - Local filesystem provider
+  - Cloudinary provider
+
+### Caching
+
+- Cache provider abstraction
+  - In-memory cache implementation
+  - Redis cache implementation
+- Centralized cache key generation
+
+### Rate Limiting
+
+- Reusable rate-limiting strategies
+- Predefined rate-limiting policies
+- Support for different request identification strategies
+
+### Real-Time Communication
+
+- Socket provider abstraction
+  - Socket.IO implementation
+- Centralized socket initialization
+- Feature-specific socket events
+
+### Background Processing
+
+- Worker thread abstraction
+- Reusable worker pool
+- Worker task registry
+- Background execution of registered tasks
+- Worker error handling
+- Worker lifecycle management
+
+The worker infrastructure allows CPU-intensive or isolated tasks to be executed outside the main Node.js event loop.
+
+### Pagination
+
+- Reusable server-side pagination component
+
+### Observability
+
+- Configurable logger abstraction
+  - Custom logger
+  - Pino logger
+- Error serialization
+- Request correlation IDs
+- Health endpoint
+- Prometheus metrics endpoint
+
+The template intentionally keeps observability lightweight. Application-level business metrics are not prescribed by the template; infrastructure and observability platforms can consume the exposed service metrics.
+
 
 
 ## Architecture
@@ -123,23 +196,7 @@ At a high level:
          ▼
     Database
 
-Authentication introduces additional abstractions for separating:
-
-    Authentication Strategy
-            │
-            ├── JWT
-            └── JWT + Refresh Sessions
-
-    Authentication Transport
-            │
-            ├── Bearer
-            └── Cookie
-
-This allows authentication mechanisms and token delivery mechanisms to evolve independently.
-
-### Detailed Architecture
-
-For the complete architecture, request lifecycle, authentication design, repository abstraction, response handling, exception handling, and folder responsibilities, see [`ARCHITECTURE.md`](./ARCHITECTURE.md).
+For the complete architecture, request lifecycle, authentication design, repository abstraction, response handling, exception handling, and folder responsibilities, see [`ARCHITECTURE.md`](./docs/ARCHITECTURE.md).
 
 ---
 
@@ -147,15 +204,21 @@ For the complete architecture, request lifecycle, authentication design, reposit
 
     src/
     ├── auth/
+    ├── cache/
     ├── config/
     ├── controllers/
     ├── db/
+    ├── fileUpload/
     ├── middleware/
+    ├── notifications/
+    ├── payment/
     ├── routes/
     ├── services/
-    └── utils/
+    ├── socket/
+    ├── utils/
+    └── validators/
 
-The exact responsibilities and relationships between these modules are documented in [`ARCHITECTURE.md`](./ARCHITECTURE.md).
+The exact responsibilities and relationships between these modules are documented in [`file-index.md`](./docs/file-index.md).
 
 ---
 
@@ -175,6 +238,12 @@ Clone the repository and switch to this branch:
     cd BackendTemplates
     git checkout NodejsV1
 
+THIS GIVES YOU THE WHOLE GIT HISTORY AS WELL. FOR ALTERNATIVE WITHOUT GIT HISTORY : 
+
+    npx degit STRO09/BackendTemplates#NodejsV1 my-project
+    cd my-project
+    npm install
+
 Install dependencies:
 
     npm install
@@ -193,7 +262,7 @@ Configure the required environment variables and start the development server:
 
 Environment variables are centralized through the application configuration module.
 
-The `.env.example` file contains the available configuration options.
+The `.env.example` file contains the available configuration options & details.
 
 Important configuration includes:
 
@@ -207,39 +276,6 @@ Important configuration includes:
 Environment variables are intentionally kept separate from application logic so that configuration can be changed without modifying the implementation.
 
 ---
-
-## Authentication Modes
-
-The template currently supports multiple authentication configurations.
-
-### JWT
-
-    Password
-       │
-       ▼
-    JWT Access Token
-       │
-       ├── Bearer
-       └── Cookie
-
-### JWT + Refresh Tokens
-
-    Password
-       │
-       ▼
-    Access Token + Refresh Token
-                  │
-                  └── Persisted Refresh Session
-
-Access tokens may be delivered through:
-
-- Authorization Bearer header
-- HTTP-only cookie
-
-Refresh tokens are delivered through an HTTP-only cookie.
-
-Refresh tokens are persisted as hashes rather than plaintext values and are rotated when consumed.
-
 
 ## Screenshots & Media
 
@@ -261,7 +297,6 @@ Refresh tokens are persisted as hashes rather than plaintext values and are rota
 Testing documentation and automated test coverage will be expanded as the template evolves.
 
 
-
 ## Future Enhancements
 
 Planned improvements include:
@@ -270,30 +305,29 @@ Planned improvements include:
 - Passkeys / WebAuthn
 - Logout and session management
 - Expanded automated testing
-- Rate limiting
 - Additional security hardening
-- Email verification
 - Password reset flows
 - Account recovery
 - API documentation
-- Production deployment examples
 - Additional database implementations
+- Additional payment providers
+- Additional email providers
+- Additional file storage providers
 
 
 ## Status
 
-**Development**
+**Intended Base Completed / Upgrading**
 
 The template is actively being developed as part of the Backend Templates project.
 
-The architecture and APIs may change as additional authentication mechanisms, infrastructure, and production-oriented features are introduced.
+The architecture may change as additional authentication mechanisms, infrastructure, and production-oriented features are introduced.
 
 
 ## Documentation
 
 Additional documentation:
 
-- [`ARCHITECTURE.md`](./ARCHITECTURE.md) — Architecture, request lifecycle, authentication, repositories, responses, exceptions, and design decisions.
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — Contribution and development guidelines.
 
 

@@ -146,6 +146,10 @@ Handles authentication-related HTTP requests.
 
 Handles email verification requests.
 
+### src/controllers/health.controller.js
+
+Health checks, metrics and diagnosis requests.
+
 ### src/controllers/product.controller.js
 
 Handles product-related HTTP requests.
@@ -234,6 +238,10 @@ Provides centralized application error handling.
 
 Applies HTTP security headers using Helmet.
 
+### src/middleware/requestId.middleware.js
+
+Creates requestId and attaches on every incoming request and sends it in every response in meta.
+
 ### src/middleware/upload.middleware.js
 
 Processes incoming file uploads.
@@ -309,6 +317,10 @@ Implements payment operations using the Razorpay API, including order creation, 
 ### src/routes/auth.routes.js
 
 Defines authentication endpoints.
+
+### src/routes/health.routes.js
+
+Health & metrics endpoints.
 
 ### src/routes/index.routes.js
 
@@ -410,6 +422,10 @@ Provides JWT generation and verification utilities.
 ### src/utils/logger.js
 
 Provides structured application logging.
+
+### src/utils/metrics.js
+
+Registers and uses prometheus client for service metrics.
 
 ### src/utils/pagination.js
 
