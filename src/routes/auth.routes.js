@@ -19,4 +19,11 @@ router.post("/verify-email/send", authenticate, verificationController.send);
 
 router.get("/verify-email", verificationController.verify);
 
+
+// DO NOT USE THIS LOGOUT ROUTES WITH JWT. JWT IS MEANT TO BE STATELESS AND HENCE CAN'T BE INVALIDATED FROM SERVER. CLEAR THE COOKIE/STORAGE INSTEAD FROM CLIENT SIDE.
+
+router.post("/logout", authenticate, authController.logout);
+
+router.post("/logout-all", authenticate, authController.logoutAll);
+
 export default router;

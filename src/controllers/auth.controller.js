@@ -56,6 +56,33 @@ class AuthController {
       data: response,
     });
   });
+
+  logout = asyncHandler(async (req, res) => {
+    const refreshToken = cookieTransport.extractRefreshToken(req);
+
+    if (!refreshToken) {
+      throw new ApiError({
+        statusCode: 401,
+        message: "Refresh token required.",
+      });
+    }
+
+    await authService.logout(refreshToken);
+
+    return success(res, {
+      message: "Logout successful.",
+    });
+  });
+
+  logoutAll = asyncHandler(async (req, res) => {
+    const userId = req.user.sub;
+
+    await authService.logoutAll(userId);
+
+    return success(res, {
+      message: "All active sessions logged out successfully.",
+    });
+  });
 }
 
 export default new AuthController();

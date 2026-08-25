@@ -46,7 +46,7 @@ The goal is not to provide a complete application, but rather a strong foundatio
 | Logging | Custom Logger / Pino |
 | Metrics | prom-client / Prometheus |
 | Real-time Communication | Socket.IO |
-| Payment | Razorpay / Stripe |
+| Payment | Razorpay  |
 | Email | Resend / SMTP |
 | File Storage | Local Filesystem / Cloudinary |
 | Cache | In-Memory / Redis |
@@ -94,6 +94,7 @@ THE ARCHITECTURE IS PROVIDER-BASED WHERE PRACTICAL, ALLOWING INFRASTRUCTURE IMPL
   - IP address
   - User agent
 - Configurable refresh-token cookie transport
+- Logout and logout all active sessions with refresh token
 
 ### Email
 
@@ -109,10 +110,9 @@ THE ARCHITECTURE IS PROVIDER-BASED WHERE PRACTICAL, ALLOWING INFRASTRUCTURE IMPL
 
 - Payment provider abstraction
   - Razorpay provider
-  - Stripe provider
 - Razorpay webhook integration
 
-The payment architecture isolates operations behind a provider interface so the application is not directly coupled to the Razorpay / Stripe SDK/API.
+The payment architecture isolates operations behind a provider interface so the application is not directly coupled to the Razorpay SDK/API.
 
 ### File Uploads
 
@@ -303,7 +303,6 @@ Planned improvements include:
 
 - OAuth 2.0 / OpenID Connect
 - Passkeys / WebAuthn
-- Logout and session management
 - Expanded automated testing
 - Additional security hardening
 - Password reset flows
@@ -313,6 +312,7 @@ Planned improvements include:
 - Additional payment providers
 - Additional email providers
 - Additional file storage providers
+~~ - Stripe provider ~~ (Stripe isn't available in india.)
 
 
 ## Status

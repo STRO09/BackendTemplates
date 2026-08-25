@@ -2,9 +2,11 @@ import passwordProvider from "../auth/providers/password.provider.js";
 import authStrategy from "../auth/provider.js";
 import repositories from "../db/provider.js";
 import { hash } from "../utils/hashing.js";
+import { hashRefreshToken } from "../utils/refreshToken.js";
 import { generateFromEmail } from "../utils/usernameGenerator.js";
 import { serializeUser } from "../utils/userSerializer.js";
-const { user: userRepository } = repositories;
+const { user: userRepository, refreshSession: refreshSessionRepository } =
+  repositories;
 
 import ApiError from "../utils/ApiError.js";
 import logger from "../utils/logger.js";
@@ -89,6 +91,26 @@ class AuthService {
 
   async refresh(refreshToken, context = {}) {
     return authStrategy.refresh(refreshToken, context);
+  }
+
+  async logout(refreshToken) {
+    const tokenHash = hashRefreshToken(refreshToken);
+    const revoked = await refreshSessionRepository.revoke(tokenHash);
+
+    if (!revoked) {
+      throw new ApiError({
+        statusCode: 404,
+        message: "Refresh token not found.",
+      });
+    }
+
+    return revoked;
+  }
+
+  async logoutAll(userId) {
+    await refreshSessionRepository.revokeAllForUser(userId);
+
+    return true;
   }
 }
 
