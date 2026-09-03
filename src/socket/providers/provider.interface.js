@@ -30,6 +30,20 @@ export default class SocketProvider {
   }
 
   /**
+   * Register a connection handler.
+   *
+   * @abstract
+   *
+   * @param {function} handler
+   *
+   * @returns {void}
+   */
+
+  onConnection(handler) {
+    throw new Error("Method not implemented.");
+  }
+
+  /**
    * Emit an event.
    *
    * @abstract
