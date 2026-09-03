@@ -17,13 +17,31 @@ const providers = {
   // sendgrid: sendgridProvider,
 };
 
-const notificationProvider = providers[env.NOTIFICATION_PROVIDER];
-await notificationProvider.initialize();
+const uninitializedProvider = new Proxy(
+  {},
+  {
+    get() {
+      throw new Error(
+        "Notification provider is not initialized. Set NOTIFICATION_PROVIDER in your environment.",
+      );
+    },
+  },
+);
 
-if (!notificationProvider) {
-  throw new Error(
-    `Unsupported notification provider: ${env.NOTIFICATION_PROVIDER}`,
-  );
+const providerName = env.NOTIFICATION_PROVIDER;
+
+let notificationProvider;
+
+if (providerName === undefined || providerName === "none") {
+  notificationProvider = uninitializedProvider;
+} else if (providerName === "") {
+  throw new Error("NOTIFICATION_PROVIDER is configured but empty.");
+} else {
+  notificationProvider = providers[providerName];
+
+  if (!notificationProvider) {
+    throw new Error(`Unsupported notification provider: ${providerName}`);
+  }
+  await notificationProvider.initialize();
 }
-
 export default notificationProvider;

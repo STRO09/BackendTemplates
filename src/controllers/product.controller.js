@@ -36,6 +36,7 @@ class ProductController {
     const products = await productService.findPaginated({
       page: req.query.page,
       limit: req.query.limit,
+      search: req.query.search,
     });
 
     return success(res, {

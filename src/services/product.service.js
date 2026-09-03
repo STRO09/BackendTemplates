@@ -41,14 +41,22 @@ class ProductService {
     return product;
   }
 
-  async findPaginated({ page, limit }) {
+  async findPaginated({ page, limit, search = "" }) {
     const pagination = getPagination({
       page,
       limit,
     });
+    const filter = {};
+
+    if (search) {
+      filter.name = {
+        $regex: search,
+        $options: "i",
+      };
+    }
 
     const { items, total } = await productRepository.findPaginated(
-      {},
+      filter,
       pagination,
     );
 

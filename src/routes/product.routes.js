@@ -9,9 +9,11 @@ const router = express.Router();
 
 router.post("/", authenticate, validate(createProductSchema), controller.create);
 
-router.get("/", authenticate, controller.getAll);
+// router.get("/", authenticate, controller.getAll);
+router.get("/", controller.getAll);
 
-router.get("/paginated", authenticate, controller.findPaginated);
+// router.get("/paginated", authenticate, controller.findPaginated);
+router.get("/paginated", controller.findPaginated);
 
 // router.get("/cache", async (req, res) => {
 //   await cacheProvider.set(

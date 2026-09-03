@@ -36,7 +36,7 @@ function required(key) {
   return value;
 }
 const authStrategy = required("AUTH_STRATEGY");
-const paymentProvider = required("PAYMENT_PROVIDER");
+const paymentProvider = process.env.PAYMENT_PROVIDER;
 
 /**
  * Application configuration.
@@ -66,11 +66,6 @@ const env = {
   JWT_SECRET: required("JWT_SECRET"),
 
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN ?? "15m",
-
-  REFRESH_SECRET:
-    authStrategy === "jwt-refresh"
-      ? required("REFRESH_SECRET")
-      : process.env.REFRESH_SECRET,
 
   REFRESH_EXPIRES_IN:
     authStrategy === "jwt-refresh"
@@ -131,7 +126,7 @@ const env = {
 
   MAIL_FROM: process.env.MAIL_FROM ?? "noreply@localhost",
 
-  NOTIFICATION_PROVIDER: required("NOTIFICATION_PROVIDER"),
+  NOTIFICATION_PROVIDER: process.env.NOTIFICATION_PROVIDER,
 
   /*
    * Resend.
@@ -144,9 +139,15 @@ const env = {
    */
   PAYMENT_PROVIDER: paymentProvider,
 
-  RAZORPAY_KEY_ID: paymentProvider === "razorpay" ? required("RAZORPAY_KEY_ID") : process.env.RAZORPAY_KEY_ID,
+  RAZORPAY_KEY_ID:
+    paymentProvider === "razorpay"
+      ? required("RAZORPAY_KEY_ID")
+      : process.env.RAZORPAY_KEY_ID,
 
-  RAZORPAY_KEY_SECRET: paymentProvider === "razorpay" ? required("RAZORPAY_KEY_SECRET") : process.env.RAZORPAY_KEY_SECRET,
+  RAZORPAY_KEY_SECRET:
+    paymentProvider === "razorpay"
+      ? required("RAZORPAY_KEY_SECRET")
+      : process.env.RAZORPAY_KEY_SECRET,
 };
 
 export default env;

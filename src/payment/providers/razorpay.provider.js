@@ -9,10 +9,24 @@ class RazorpayProvider extends PaymentProvider {
   constructor() {
     super();
 
-    this.client = new Razorpay({
-      key_id: env.RAZORPAY_KEY_ID,
-      key_secret: env.RAZORPAY_KEY_SECRET,
-    });
+    this.client = null;
+  }
+
+  getClient() {
+    if (!this.client) {
+      if (!env.RAZORPAY_KEY_ID || !env.RAZORPAY_KEY_SECRET) {
+        throw new Error(
+          "Razorpay credentials are required when using the Razorpay payment provider.",
+        );
+      }
+
+      this.client = new Razorpay({
+        key_id: env.RAZORPAY_KEY_ID,
+        key_secret: env.RAZORPAY_KEY_SECRET,
+      });
+    }
+
+    return this.client;
   }
 
   /**
@@ -34,7 +48,7 @@ class RazorpayProvider extends PaymentProvider {
    * @returns {Promise<Object>}
    */
   async createOrder({ amount, currency, receipt, notes }) {
-    return this.client.orders.create({
+    return this.getClient().orders.create({
       amount,
       currency,
       receipt,
@@ -80,7 +94,7 @@ class RazorpayProvider extends PaymentProvider {
    * Razorpay payment details.
    */
   async fetchPayment(paymentId) {
-    return this.client.payments.fetch(paymentId);
+    return this.getClient().payments.fetch(paymentId);
   }
 }
 
