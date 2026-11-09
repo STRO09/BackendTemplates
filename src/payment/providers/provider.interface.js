@@ -31,6 +31,23 @@ export default class PaymentProvider {
     throw new Error("Method not implemented.");
   }
 
+  /**
+   * Verify a fetched payment against the provider order and checkout.
+   *
+   * @param {Object} options
+   * @param {string} options.orderId
+   * Provider-side order or payment-intent ID.
+   * @param {string} options.paymentId
+   * Provider-side payment ID.
+   * @param {string} [options.signature]
+   * Provider signature, when required by the provider.
+   * @param {Object} options.payment
+   * Payment details fetched directly from the provider.
+   * @param {string} options.merchantReference
+   * Application checkout reference.
+   *
+   * @returns {boolean}
+   */
   verifyPayment() {
     throw new Error("Method not implemented.");
   }

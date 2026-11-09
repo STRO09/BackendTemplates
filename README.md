@@ -46,7 +46,7 @@ The goal is not to provide a complete application, but rather a strong foundatio
 | Logging | Custom Logger / Pino |
 | Metrics | prom-client / Prometheus |
 | Real-time Communication | Socket.IO |
-| Payment | Razorpay  |
+| Payment | Razorpay / Hyperswitch |
 | Email | Resend / SMTP |
 | File Storage | Local Filesystem / Cloudinary |
 | Cache | In-Memory / Redis |
@@ -110,9 +110,11 @@ THE ARCHITECTURE IS PROVIDER-BASED WHERE PRACTICAL, ALLOWING INFRASTRUCTURE IMPL
 
 - Payment provider abstraction
   - Razorpay provider
+  - Hyperswitch provider
 - Razorpay webhook integration
 
-The payment architecture isolates operations behind a provider interface so the application is not directly coupled to the Razorpay SDK/API.
+The payment architecture isolates operations behind a provider interface so the application is not directly coupled to a payment gateway.
+For Hyperswitch, configure `PAYMENT_PROVIDER=hyperswitch`, set `HYPERSWITCH_API_KEY`, and use the returned `data.payment.clientSecret` with a Hyperswitch-compatible client SDK. After payment confirmation, submit `data.payment.orderId` as both `orderId` and `paymentId` to the payment verification endpoint; no client signature is required because the server retrieves and verifies the payment directly with Hyperswitch. The base URL defaults to the sandbox endpoint and can be overridden with `HYPERSWITCH_BASE_URL`.
 
 ### File Uploads
 
@@ -353,4 +355,3 @@ See [`LICENSE`](./LICENSE) for details.
 Part of the [`BackendTemplates`](https://github.com/STRO09/BackendTemplates) project.
 
 If you find this template useful, consider giving the repository a ⭐.
-

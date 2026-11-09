@@ -66,6 +66,16 @@ const checkoutSchema = new mongoose.Schema(
       sparse: true,
     },
 
+    paymentProviderOrderId: {
+      type: String,
+      unique: true,
+      sparse: true,
+    },
+
+    paymentClientSecret: {
+      type: String,
+    },
+
     expiresAt: {
       type: Date,
       required: true,

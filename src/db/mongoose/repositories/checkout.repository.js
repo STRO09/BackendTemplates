@@ -23,21 +23,24 @@ class CheckoutRepository extends MongoRepository {
 
   /**
    * Find a pending checkout belonging to a user
-   * using its Razorpay order ID.
+   * using its payment-provider order ID.
    *
    * @param {string} userId
    * Authenticated user ID.
    *
-   * @param {string} razorpayOrderId
-   * Razorpay order ID associated with the checkout.
+   * @param {string} paymentOrderId
+   * Payment-provider order ID associated with the checkout.
    *
    * @returns {Promise<Object|null>}
    * The matching checkout, or null if none exists.
    */
-  async findPendingByUserAndRazorpayOrderId(userId, razorpayOrderId) {
+  async findPendingByUserAndPaymentOrderId(userId, paymentOrderId) {
     return this.model.findOne({
       user: userId,
-      razorpayOrderId,
+      $or: [
+        { paymentProviderOrderId: paymentOrderId },
+        { razorpayOrderId: paymentOrderId },
+      ],
       paymentStatus: "pending",
       expiresAt: {
         $gt: new Date(),

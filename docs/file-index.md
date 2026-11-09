@@ -305,10 +305,13 @@ Generates the welcome email.
 Defines the common contract that every payment provider implementation must follow.
 
 ### src/payment/providers/provider.js 
-Selects and exposes the configured payment provider without coupling the rest of the application to Razorpay.
+Selects and exposes the configured payment provider without coupling the rest of the application to a specific gateway.
 
 ### src/payment/providers/razorpay.provider.js 
 Implements payment operations using the Razorpay API, including order creation, payment verification, and payment lookup.
+
+### src/payment/providers/hyperswitch.provider.js
+Implements payment creation and server-side payment verification using the Hyperswitch API.
 
 ---
 

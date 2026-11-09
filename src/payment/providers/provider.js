@@ -1,7 +1,9 @@
 import env from "../../config/env.js";
+import hyperswitchProvider from "./hyperswitch.provider.js";
 import razorpayProvider from "./razorpay.provider.js";
 
 const providers = {
+  hyperswitch: hyperswitchProvider,
   razorpay: razorpayProvider,
 };
 

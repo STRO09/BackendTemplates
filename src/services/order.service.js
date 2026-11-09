@@ -9,6 +9,19 @@ const {
 } = repositories;
 
 class OrderService {
+  toCheckoutResponse(checkout) {
+    const checkoutData = checkout.toObject();
+
+    return {
+      ...checkoutData,
+      payment: {
+        orderId:
+          checkout.paymentProviderOrderId ?? checkout.razorpayOrderId,
+        clientSecret: checkout.paymentClientSecret,
+      },
+    };
+  }
+
   async checkout({ userId, items }) {
     if (!items?.length) {
       throw new ApiError({
@@ -20,7 +33,7 @@ class OrderService {
     const existingCheckout = await checkoutRepository.findActiveByUser(userId);
 
     if (existingCheckout) {
-      return existingCheckout;
+      return this.toCheckoutResponse(existingCheckout);
     }
 
     const productIds = items.map((item) => item.productId);
@@ -72,15 +85,21 @@ class OrderService {
     });
 
     try {
-      const razorpayOrder = await paymentProvider.createOrder({
+      const paymentOrder = await paymentProvider.createOrder({
         amount: total * 100,
         currency: "INR",
         receipt: `checkout_${checkout._id}`,
       });
 
-      return checkoutRepository.updateById(checkout._id, {
-        razorpayOrderId: razorpayOrder.id,
-      });
+      const updatedCheckout = await checkoutRepository.updateById(
+        checkout._id,
+        {
+          paymentProviderOrderId: paymentOrder.id,
+          paymentClientSecret: paymentOrder.clientSecret,
+        },
+      );
+
+      return this.toCheckoutResponse(updatedCheckout);
     } catch (error) {
       await checkoutRepository.deleteById(checkout._id);
 
@@ -98,7 +117,11 @@ class OrderService {
   }
 
   async verifyPayment({ userId, orderId, paymentId, signature }) {
-    const checkout = await checkoutRepository.findPendingByUserAndRazorpayOrderId(userId, orderId);
+    const checkout =
+      await checkoutRepository.findPendingByUserAndPaymentOrderId(
+        userId,
+        orderId,
+      );
 
     if (!checkout) {
       throw new ApiError({
@@ -107,25 +130,21 @@ class OrderService {
       });
     }
 
+    const payment = await paymentProvider.fetchPayment(paymentId);
+    const paymentOrderId =
+      checkout.paymentProviderOrderId ?? checkout.razorpayOrderId;
     const isValid = paymentProvider.verifyPayment({
-      orderId: checkout.razorpayOrderId,
+      orderId: paymentOrderId,
       paymentId,
       signature,
+      payment,
+      merchantReference: `checkout_${checkout._id}`,
     });
 
     if (!isValid) {
       throw new ApiError({
         statusCode: 400,
-        message: "Invalid payment signature.",
-      });
-    }
-
-    const payment = await paymentProvider.fetchPayment(paymentId);
-
-    if (payment.order_id !== checkout.razorpayOrderId) {
-      throw new ApiError({
-        statusCode: 400,
-        message: "Payment does not belong to this checkout.",
+        message: "Payment details could not be verified.",
       });
     }
 

@@ -148,6 +148,16 @@ const env = {
     paymentProvider === "razorpay"
       ? required("RAZORPAY_KEY_SECRET")
       : process.env.RAZORPAY_KEY_SECRET,
+
+  HYPERSWITCH_API_KEY:
+    paymentProvider === "hyperswitch"
+      ? required("HYPERSWITCH_API_KEY")
+      : process.env.HYPERSWITCH_API_KEY,
+
+  HYPERSWITCH_BASE_URL:
+    process.env.HYPERSWITCH_BASE_URL ?? "https://sandbox.hyperswitch.io",
+
+  HYPERSWITCH_PROFILE_ID: process.env.HYPERSWITCH_PROFILE_ID,
 };
 
 export default env;

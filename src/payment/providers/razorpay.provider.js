@@ -69,15 +69,30 @@ class RazorpayProvider extends PaymentProvider {
    *
    * @returns {boolean}
    */
-  verifyPayment({ orderId, paymentId, signature }) {
+  verifyPayment({ orderId, paymentId, signature, payment }) {
+    if (
+      typeof signature !== "string" ||
+      !payment ||
+      payment.order_id !== orderId
+    ) {
+      return false;
+    }
+
     const generatedSignature = crypto
       .createHmac("sha256", env.RAZORPAY_KEY_SECRET)
       .update(`${orderId}|${paymentId}`)
       .digest("hex");
 
+    const expectedSignature = Buffer.from(generatedSignature);
+    const providedSignature = Buffer.from(signature);
+
+    if (providedSignature.length !== expectedSignature.length) {
+      return false;
+    }
+
     return crypto.timingSafeEqual(
-      Buffer.from(generatedSignature),
-      Buffer.from(signature),
+      expectedSignature,
+      providedSignature,
     );
   }
 

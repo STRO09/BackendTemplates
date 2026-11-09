@@ -15,9 +15,9 @@ export const checkoutSchema = z.object({
 });
 
 export const verifyPaymentSchema = z.object({
-  orderId: z.string().min(1, "Razorpay order ID is required."),
+  orderId: z.string().min(1, "Payment order ID is required."),
 
   paymentId: z.string().min(1, "Payment ID is required."),
 
-  signature: z.string().min(1, "Payment signature is required."),
+  signature: z.string().min(1, "Payment signature is required.").optional(),
 });
